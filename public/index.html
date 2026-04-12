@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>INVENTRA Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="login-body">
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+
+  <main class="login-wrapper">
+    <section class="login-panel glass animate-float">
+      <div class="brand-row">
+        <div class="brand-icon">📦</div>
+        <div>
+          <h1>INVENTRA</h1>
+          <p>Smart inventory dashboard</p>
+        </div>
+      </div>
+
+      <div id="authMessage" class="auth-message hidden"></div>
+
+      <form id="authForm" class="auth-form" onsubmit="return false;">
+        <label>Username</label>
+        <input type="text" id="username" placeholder="Enter username" required />
+
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter password" required />
+
+        <button class="primary-btn" id="loginBtn" type="button">Login</button>
+        <button class="secondary-btn" id="registerBtn" type="button">Register</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

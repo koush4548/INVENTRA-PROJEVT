@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>INVENTRA Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/html5-qrcode" defer></script>
+</head>
+<body class="app-body">
+  <div class="app-shell">
+
+    <aside class="sidebar glass-dark">
+      <div class="sidebar-top">
+        <div class="brand-icon">📦</div>
+        <div>
+          <h2>INVENTRA</h2>
+          <p>Control Center</p>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-link active" data-page="dashboardPage">Dashboard</button>
+        <button class="nav-link" data-page="productsPage">Products</button>
+        <button class="nav-link" data-page="salesPage">Sales</button>
+        <button class="nav-link" data-page="salesHistoryPage">Sales History</button>
+        <button class="nav-link" data-page="analyticsPage">Analytics</button>
+        <button class="nav-link" data-page="auditPage">Audit</button>
+        <button class="nav-link" data-page="qrPage">QR Scanner</button>
+        <button class="nav-link" data-page="settingsPage">Settings</button>
+      </nav>
+
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </aside>
+
+    <section class="main-panel">
+      <header class="topbar glass">
+        <div>
+          <h1>Inventory Management System</h1>
+          <p>Professional dashboard</p>
+        </div>
+        <div class="user-chip">
+          <span>👤</span>
+          <strong id="userDisplay">User</strong>
+        </div>
+      </header>
+
+      <section id="dashboardPage" class="page active">
+        <div class="stats-grid">
+          <div class="stat-card glass">
+            <h3>Total Products</h3>
+            <p id="statProducts">0</p>
+          </div>
+          <div class="stat-card glass">
+            <h3>Total Quantity</h3>
+            <p id="statQuantity">0</p>
+          </div>
+          <div class="stat-card glass">
+            <h3>Low Stock</h3>
+            <p id="statLowStock">0</p>
+            <small id="lowStockText">Limit: 5</small>
+          </div>
+          <div class="stat-card glass">
+            <h3>Inventory Value</h3>
+            <p id="statValue">₹0</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="productsPage" class="page">
+        <div class="section-header">
+          <h2>Products</h2>
+          <button class="primary-btn" id="openAddProductBtn">+ Add Product</button>
+        </div>
+
+        <div class="form-card glass">
+          <input type="hidden" id="productId"/>
+
+          <div class="form-grid">
+            <input type="text" id="productName" placeholder="Product name"/>
+            <input type="text" id="productBarcode" placeholder="Barcode"/>
+            <input type="text" id="productCategory" placeholder="Category"/>
+            <input type="number" id="productQty" placeholder="Quantity"/>
+            <input type="number" id="productCost" placeholder="Cost price"/>
+            <input type="number" id="productSell" placeholder="Selling price"/>
+            <input type="text" id="productWarehouse" placeholder="Warehouse"/>
+          </div>
+
+          <div class="form-actions">
+            <button class="primary-btn" id="saveProductBtn">Save Product</button>
+            <button class="secondary-btn" id="clearProductBtn" type="button">Clear</button>
+          </div>
+        </div>
+
+        <div class="table-card glass">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Barcode</th>
+                <th>Category</th>
+                <th>Qty</th>
+                <th>Cost</th>
+                <th>Sell</th>
+                <th>Warehouse</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="salesPage" class="page">
+        <div class="section-header">
+          <h2>Sales</h2>
+        </div>
+
+        <div class="form-card glass" style="margin-bottom:20px;">
+          <div class="form-grid">
+            <select id="salesProductSelect"></select>
+            <input type="number" id="salesQuantity" placeholder="Quantity" min="1" />
+            <input type="text" id="salesCustomerName" placeholder="Customer name" />
+          </div>
+
+          <div class="form-actions">
+            <button class="primary-btn" id="addToCartBtn">Add to Cart</button>
+            <button class="secondary-btn" id="clearCartBtn" type="button">Clear Cart</button>
+          </div>
+        </div>
+
+        <div class="table-card glass">
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="salesCartTableBody"></tbody>
+          </table>
+
+          <div class="form-actions" style="justify-content:space-between; margin-top:20px;">
+            <div style="font-size:20px; font-weight:700;">Grand Total: <span id="salesGrandTotal">₹0</span></div>
+            <button class="primary-btn" id="confirmSaleBtn">Confirm Sale</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="salesHistoryPage" class="page">
+        <div class="section-header">
+          <h2>Sales History</h2>
+        </div>
+
+        <div class="table-card glass">
+          <table>
+            <thead>
+              <tr>
+                <th>Invoice No</th>
+                <th>Customer</th>
+                <th>Total Items</th>
+                <th>Amount</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="salesHistoryTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="analyticsPage" class="page">
+        <div class="section-header">
+          <h2>Analytics</h2>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card glass">
+            <h3>Total Revenue</h3>
+            <p id="analyticsRevenue">₹0</p>
+          </div>
+          <div class="stat-card glass">
+            <h3>Total Orders</h3>
+            <p id="analyticsOrders">0</p>
+          </div>
+          <div class="stat-card glass">
+            <h3>Total Items Sold</h3>
+            <p id="analyticsItemsSold">0</p>
+          </div>
+          <div class="stat-card glass">
+            <h3>Top Product</h3>
+            <p id="analyticsTopProduct">-</p>
+          </div>
+        </div>
+
+        <div class="table-card glass" style="margin-top:20px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Recent Invoice</th>
+                <th>Amount</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="analyticsRecentSalesBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="auditPage" class="page">
+        <div class="section-header">
+          <h2>Audit Logs</h2>
+        </div>
+
+        <div class="stats-grid" style="margin-bottom:20px;">
+          <div class="stat-card glass">
+            <h3>User Audit</h3>
+            <p id="userAuditCount">0</p>
+          </div>
+
+          <div class="stat-card glass">
+            <h3>Product Audit</h3>
+            <p id="productAuditCount">0</p>
+          </div>
+        </div>
+
+        <div class="glass" style="border-radius:24px; padding:24px; margin-bottom:20px;">
+          <h3 style="margin-bottom:16px;">User Activity</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Activity</th>
+                <th>Date</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="userAuditTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="glass" style="border-radius:24px; padding:24px;">
+          <h3 style="margin-bottom:16px;">Product Activity</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Activity</th>
+                <th>Date</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="productAuditTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="qrPage" class="page">
+        <div class="section-header">
+          <h2>QR Code Scanner</h2>
+        </div>
+
+        <div class="qr-card glass">
+          <div id="reader"></div>
+
+          <div class="qr-buttons">
+            <button class="primary-btn" id="startScannerBtn">Start Scanner</button>
+            <button class="secondary-btn" id="stopScannerBtn">Stop Scanner</button>
+          </div>
+
+          <div class="scanner-note">
+            Allow camera permission when the browser asks.
+          </div>
+        </div>
+      </section>
+
+      <section id="settingsPage" class="page">
+        <div class="section-header">
+          <h2>Settings</h2>
+        </div>
+
+        <div class="settings-stack">
+          <div class="glass settings-card">
+            <h3>Profile</h3>
+            <div class="settings-vertical">
+              <input type="text" id="settingCompanyName" placeholder="Company name" />
+              <input type="text" id="settingStoreLocation" placeholder="Store location" />
+              <input type="text" id="settingNotificationEmail" placeholder="Notification email" />
+              <input type="text" id="settingInvoicePrefix" placeholder="Invoice prefix" />
+            </div>
+          </div>
+
+          <div class="glass settings-card">
+            <h3>Appearance</h3>
+            <div class="settings-vertical">
+              <select id="settingTheme">
+                <option value="dark">Dark Mode</option>
+                <option value="light">Light Mode</option>
+              </select>
+              <label class="settings-label">Accent Color</label>
+              <input type="color" id="settingAccentColor" value="#6d7cff" class="color-input" />
+            </div>
+          </div>
+
+          <div class="glass settings-card">
+            <h3>Preferences</h3>
+            <div class="settings-vertical">
+              <input type="text" id="settingCurrency" placeholder="Currency symbol" />
+              <input type="number" id="settingLowStockLimit" placeholder="Low stock limit" />
+            </div>
+          </div>
+
+          <div class="glass settings-card">
+            <h3>Notifications</h3>
+            <div class="settings-vertical">
+              <label class="toggle-row">
+                <span>Enable low stock alerts</span>
+                <input type="checkbox" id="settingLowStockAlerts" />
+              </label>
+            </div>
+          </div>
+
+          <div class="glass settings-card">
+            <h3>Security</h3>
+            <div class="settings-vertical">
+              <input type="password" id="currentPassword" placeholder="Current password" />
+              <input type="password" id="newPassword" placeholder="New password" />
+              <button class="primary-btn" id="changePasswordBtn" type="button">Change Password</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </section>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="script.js"></script>
+</body>
+</html>
