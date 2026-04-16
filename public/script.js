@@ -600,16 +600,39 @@ async function startScanner() {
 
   try {
     qrScanner = new Html5Qrcode('reader');
+
+    // First try to force the rear camera directly
+    try {
+      await qrScanner.start(
+        { facingMode: 'environment' },
+        { fps: 10, qrbox: { width: 250, height: 250 } },
+        async (decodedText) => {
+          await stopScanner(false);
+          await addProductFromQR(decodedText);
+        },
+        () => {}
+      );
+
+      showToast('Rear camera scanner started');
+      return;
+    } catch (rearCameraError) {
+      // fallback to camera list below
+    }
+
     const cameras = await Html5Qrcode.getCameras();
 
     if (!cameras || cameras.length === 0) {
-      showToast('No camera found');
       qrScanner = null;
+      showToast('No camera found');
       return;
     }
 
+    const rearCamera =
+      cameras.find((camera) => /back|rear|environment/i.test(camera.label)) ||
+      cameras[cameras.length - 1];
+
     await qrScanner.start(
-      cameras[0].id,
+      rearCamera.id,
       { fps: 10, qrbox: { width: 250, height: 250 } },
       async (decodedText) => {
         await stopScanner(false);
@@ -618,7 +641,7 @@ async function startScanner() {
       () => {}
     );
 
-    showToast('Scanner started');
+    showToast('Rear camera scanner started');
   } catch (error) {
     qrScanner = null;
     showToast('Camera permission denied or scanner failed');
