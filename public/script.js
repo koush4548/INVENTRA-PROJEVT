@@ -1,4 +1,4 @@
-const API_BASE = window.location.origin + '/api';
+const API_BASE = 'https://inventra-6f8s.onrender.com/api';
 let qrScanner = null;
 let salesCart = [];
 let appCurrency = '₹';
